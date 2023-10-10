@@ -1,4 +1,4 @@
-<h1>DocAmazicSdkLibrary</h1>
+<h1>DocADSLibrary</h1>
 <h3><li>Adding the library to your project: Add the following in your root build.gradle at the end of repositories:</br></h3>
 <pre>
   allprojects {
@@ -11,7 +11,7 @@
 <h5>Implement library in your app level build.gradle:</h5>
 <pre>
  dependencies {
-    implementation 'com.github.quangchienictu:AmazicAdsLibrary:2.2.6'
+   implementation 'com.github.LTVapp:AdsLibrary:version'
     implementation 'com.google.android.gms:play-services-ads:22.1.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     //multidex
