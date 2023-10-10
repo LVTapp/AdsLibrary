@@ -1,4 +1,4 @@
-<h1>DocAmazicSdkLibrary</h1>
+<h1>DocADSLibrary</h1>
 <h3><li>Adding the library to your project: Add the following in your root build.gradle at the end of repositories:</br></h3>
 <pre>
   allprojects {
