@@ -1,4 +1,4 @@
-package com.amazic.admobMeditationSdk.adx;
+package com.adx;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.amazic.admobMeditationSdk.util.FirebaseAnalyticsUtil;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -27,7 +26,6 @@ public class nativeAds implements CustomEventNative {
                                 @Nullable Bundle bundle) {
 
         Log.e(Tag, "ID :"+serverParameter );
-        FirebaseAnalyticsUtil.logEventMediationAdx(context,FirebaseAnalyticsUtil.NATIVE);
         AdLoader adLoader = new AdLoader.Builder(context, serverParameter)
                 .withAdListener(new AdListener() {
                     @Override

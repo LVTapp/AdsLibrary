@@ -1,4 +1,4 @@
-package com.amazic.admobMeditationSdk.adx;
+package com.adx;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.amazic.admobMeditationSdk.util.FirebaseAnalyticsUtil;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
@@ -26,7 +25,6 @@ public class inter  implements CustomEventInterstitial {
     @Override
     public void requestInterstitialAd(@NonNull Context context, @NonNull CustomEventInterstitialListener customEventInterstitialListener, @Nullable String s, @NonNull MediationAdRequest mediationAdRequest, @Nullable Bundle bundle) {
         Log.e(Tag, "ID :"+s );
-        FirebaseAnalyticsUtil.logEventMediationAdx(context,FirebaseAnalyticsUtil.INTER);
         this.mContext = context;
         isLoadSuccess = false;
         AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();

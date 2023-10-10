@@ -1,4 +1,4 @@
-package com.amazic.admobMeditationSdk.admob;
+package com.admob;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.amazic.admobMeditationSdk.util.FirebaseAnalyticsUtil;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -25,7 +24,6 @@ public class banner implements CustomEventBanner
     @Override
     public void requestBannerAd(@NonNull Context context, @NonNull CustomEventBannerListener customEventBannerListener, @Nullable String s, @NonNull AdSize adSize, @NonNull MediationAdRequest mediationAdRequest, @Nullable Bundle bundle) {
         Log.e(Tag, "ID :"+s );
-        FirebaseAnalyticsUtil.logEventMediationAdmob(context,FirebaseAnalyticsUtil.BANNER);
         adView = new AdView(context);
         adView.setAdUnitId(s);
         adView.setAdSize(adSize);
