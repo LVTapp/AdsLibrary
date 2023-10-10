@@ -1,0 +1,71 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdk 33
+
+    defaultConfig {
+        minSdkVersion 17
+        //noinspection EditedTargetSdkVersion
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    repositories {
+        mavenCentral()
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+    def multidex_version = "2.0.1"
+    implementation "androidx.multidex:multidex:$multidex_version"
+    def lifecycle_version = "2.0.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+
+
+
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.android.gms:play-services-ads:22.2.0'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.google.android.gms:play-services-basement:18.2.0'
+
+    implementation 'com.facebook.android:facebook-android-sdk:16.0.1'
+    // appsflyer
+    implementation 'com.appsflyer:af-android-sdk:6.8.2'
+    implementation 'com.appsflyer:adrevenue:6.4.3'
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+
+    implementation 'com.airbnb.android:lottie:5.0.2'
+
+}
