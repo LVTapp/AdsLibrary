@@ -25,7 +25,7 @@ public class MainActivity3 extends AppCompatActivity {
         listID.add("getString(R.string.ads_test_inter)");
         listID.add(getString(R.string.ads_test_banner));
         listID.add("getString(R.string.admod_banner_collap_id)");
-        Admob.getInstance().loadBannerFloor(this, listID);
+        Admob.getInstance().loadBanner(this, listID);
         Admob.getInstance().loadNativeAd(this, getString(R.string.admod_native_id), new NativeCallback(){
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {

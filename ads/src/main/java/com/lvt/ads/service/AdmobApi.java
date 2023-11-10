@@ -213,11 +213,11 @@ public class AdmobApi {
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
     public void loadBanner(final Activity activity) {
-        Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll());
+        Admob.getInstance().loadBanner(activity, getListIDBannerAll());
     }
 
     public void loadBanner(final Activity activity, BannerCallBack bannerCallBack) {
-        Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll(),bannerCallBack);
+        Admob.getInstance().loadBanner(activity, getListIDBannerAll(),bannerCallBack);
     }
 
     public void loadCollapsibleBanner(final Activity activity) {
@@ -317,7 +317,7 @@ public class AdmobApi {
     }
     public void loadOpenAppAdSplashFloor(final Activity activity, AdCallback adCallback){
         List listIdNew = new ArrayList();for (String id : getListIDOpenSplash()) {listIdNew.add(id);}
-        AppOpenManager.getInstance().loadOpenAppAdSplashFloor(activity,listIdNew,true,adCallback);
+        AppOpenManager.getInstance().loadOpenAppAdSplash(activity,listIdNew,true,adCallback);
     }
     public void loadNativeIntro(final Activity activity, FrameLayout frameLayout, int layoutNative){
         Admob.getInstance().loadNativeAd(activity, getListIDNativeIntro(), frameLayout,layoutNative);
