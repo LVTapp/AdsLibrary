@@ -3,8 +3,6 @@ package com.lvt.ads.util;
 import android.app.Application;
 import android.util.Log;
 
-import com.lvt.ads.service.AdmobApi;
-
 import java.util.List;
 
 public abstract class AdsApplication extends Application{
@@ -13,7 +11,7 @@ public abstract class AdsApplication extends Application{
         super.onCreate();
         AppUtil.BUILD_DEBUG = buildDebug();
         Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
-        Admob.getInstance().initAdmod(this, getListTestDeviceId());
+        Admob.getInstance().initAdmob(this, getListTestDeviceId());
         if(enableAdsResume()) {
             AppOpenManager.getInstance().init(this, getResumeAdId());
         }

@@ -1,11 +1,17 @@
 package com.amazicadslibrary;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.ump.ConsentInformation;
+import com.google.android.ump.ConsentRequestParameters;
+import com.google.android.ump.UserMessagingPlatform;
 import com.lvt.ads.callback.AdCallback;
 import com.lvt.ads.callback.ApiCallBack;
 import com.lvt.ads.service.AdmobApi;
@@ -27,8 +33,6 @@ public class Splash extends AppCompatActivity {
                 Settings.Secure.ANDROID_ID);
        Admob.getInstance().setOpenShowAllAds(true);
        Admob.getInstance().setDisableAdResumeWhenClickAds(true);
-        Admob.getInstance().setOpenEventLoadTimeLoadAdsSplash(true);
-        Admob.getInstance().setOpenEventLoadTimeShowAdsInter(true);
         // Admob
       /*  AppPurchase.getInstance().setBillingListener(new BillingListener() {
             @Override
@@ -62,15 +66,32 @@ public class Splash extends AppCompatActivity {
                 startActivity(new Intent(Splash.this,MainActivity.class));
                 finish();
             }
-        };
-        AdmobApi.getInstance().setListIDOther("native_home");
-        AdmobApi.getInstance().init(this,getString(R.string.linkServer),getString(R.string.app_id),new ApiCallBack(){
+
             @Override
-            public void onReady() {
-                super.onReady();
-                AdmobApi.getInstance().loadOpenAppAdSplashFloor(Splash.this,adCallback);
+            public void onAdFailedToLoad(@Nullable LoadAdError i) {
+                super.onAdFailedToLoad(i);
+                Log.e("xxxx load fall : ",i.toString());
             }
+        };
+
+        List listID = new ArrayList();
+        listID.add("ca-app-pub-3940256099942544/9257395921");
+        listID.add("ca-app-pub-3940256099942544/9257395921");
+        ConsentRequestParameters params = new ConsentRequestParameters
+                .Builder()
+                .build();
+        AdsConsentManager adsConsentManager = new AdsConsentManager(this);
+        adsConsentManager.requestUMP(b -> {
+            if (b) {
+                Admob.getInstance().initAdmob(getBaseContext(), null);
+                AppOpenManager.getInstance().init(getApplication(), getString(R.string.ads_test_resume));
+                AppOpenManager.getInstance().disableAppResumeWithActivity(Splash.class);
+            }
+            AppOpenManager.getInstance().loadOpenAppAdSplash(this,listID,true, adCallback );
         });
+
+
+
 
 
 

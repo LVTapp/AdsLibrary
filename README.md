@@ -156,7 +156,7 @@ mInterstitialAd = interstitialAd;
                 //start activity
             }
         };
-   AppOpenManager.getInstance().loadOpenAppAdSplash(this,"ca-app-pub-3940256099942544/3419835294",3000,10000,true,adCallback);
+   AppOpenManager.getInstance().loadOpenAppAdSplash(this,"ca-app-pub-3940256099942544/9257395921",3000,10000,true,adCallback);
   ---- onresume -----
   AppOpenManager.getInstance().onCheckShowSplashWhenFail(this,adCallback,1000);
 </pre>

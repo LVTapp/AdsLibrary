@@ -32,14 +32,12 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.lvt.ads.BuildConfig;
 import com.lvt.ads.R;
-import com.lvt.ads.callback.AdCallback;
 import com.lvt.ads.callback.BannerCallBack;
 import com.lvt.ads.callback.InterCallback;
 import com.lvt.ads.callback.NativeCallback;
 import com.lvt.ads.callback.RewardCallback;
 import com.lvt.ads.dialog.LoadingAdsDialog;
 import com.lvt.ads.event.AdType;
-import com.lvt.ads.event.AdmobEvent;
 import com.lvt.ads.event.FirebaseUtil;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.ads.mediation.admob.AdMobAdapter;
@@ -100,16 +98,12 @@ public class Admob {
 
     public static long timeLimitAds = 0; // Set > 1000 nếu cần limit ads click
     private boolean isShowInter = true;
-    private boolean isShowBanner = true;
     private boolean isShowNative = true;
-    private boolean logTimeLoadAdsSplash = false;
-    private boolean logLogTimeShowAds = false;
     public static boolean isShowAllAds = true;
-    private boolean isFan = false;
-    private long currentTime;
-    private long currentTimeShowAds;
     private boolean checkLoadBanner = false;
     private boolean checkLoadBannerCollap = false;
+
+    private long timeLimitShowAds = 0;
 
     public static Admob getInstance() {
         if (INSTANCE == null) {
@@ -118,7 +112,7 @@ public class Admob {
         return INSTANCE;
     }
 
-    public void initAdmod(Context context, List<String> testDeviceList) {
+    public void initAdmob(Context context, List<String> testDeviceList) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             String processName = Application.getProcessName();
             String packageName = context.getPackageName();
@@ -133,7 +127,7 @@ public class Admob {
         this.context = context;
     }
 
-    public void initAdmod(Context context) {
+    public void initAdmob(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             String processName = Application.getProcessName();
             String packageName = context.getPackageName();
@@ -151,9 +145,6 @@ public class Admob {
         this.context = context;
     }
 
-    public void setFan(boolean fan) {
-        isFan = fan;
-    }
 
     /* =======================   Banner ================================= */
 
@@ -163,7 +154,13 @@ public class Admob {
     public void setDisableAdResumeWhenClickAds(boolean disableAdResumeWhenClickAds) {
         this.disableAdResumeWhenClickAds = disableAdResumeWhenClickAds;
     }
+    /**
+     * Set time show ads
+     **/
 
+    public void setTimeLimitShowAds(long timeLimitAds) {
+        this.timeLimitShowAds = timeLimitAds;
+    }
 
     /**
      * Set tắt toàn bộ ads trong project
@@ -171,21 +168,6 @@ public class Admob {
     public void setOpenShowAllAds(boolean isShowAllAds) {
         this.isShowAllAds = isShowAllAds;
     }
-
-    /**
-     * Set tắt event log time load splash
-     **/
-    public void setOpenEventLoadTimeLoadAdsSplash(boolean logTimeLoadAdsSplash) {
-        this.logTimeLoadAdsSplash = logTimeLoadAdsSplash;
-    }
-
-    /**
-     * Set tắt event log time show splash
-     **/
-    public void setOpenEventLoadTimeShowAdsInter(boolean logLogTimeShowAds) {
-        this.logLogTimeShowAds = logLogTimeShowAds;
-    }
-
     /*=================================Banner ======================================/
  /**
       * Load quảng cáo Banner Trong Activity
@@ -202,7 +184,13 @@ public class Admob {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
-            loadBanner(mActivity, id, adContainer, containerShimmer, null, false, BANNER_INLINE_LARGE_STYLE);
+            loadBanner(mActivity, id, adContainer, containerShimmer, new BannerCallBack(){
+                @Override
+                public void onAdClicked() {
+                    super.onAdClicked();
+                    loadBanner(mActivity,id);
+                }
+            }, false, BANNER_INLINE_LARGE_STYLE);
         }
     }
 
@@ -641,9 +629,6 @@ public class Admob {
                     if (callback != null) {
                         callback.onAdClicked();
                     }
-                    if (disableAdResumeWhenClickAds)
-                        AppOpenManager.getInstance().disableAdResumeByClickAction();
-                    FirebaseUtil.logClickAdsEvent(context, id);
                 }
 
                 @Override
@@ -1010,9 +995,6 @@ public class Admob {
                 }
             }, 3000);
         } else {
-            if (logTimeLoadAdsSplash) {
-                currentTime = System.currentTimeMillis();
-            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -1095,8 +1077,6 @@ public class Admob {
                     if (disableAdResumeWhenClickAds)
                         AppOpenManager.getInstance().disableAdResumeByClickAction();
                     super.onAdClicked();
-                    if (timeLimitAds > 1000)
-                        setTimeLimitInter();
                 }
             });
 
@@ -1180,11 +1160,6 @@ public class Admob {
                             AppOpenManager.getInstance().disableAppResume();
                         }
                         isShowLoadingSplash = true;
-                        if (logTimeLoadAdsSplash) {
-                            long timeLoad = System.currentTimeMillis() - currentTime;
-                            Log.e(TAG, "load ads time :" + timeLoad);
-                            FirebaseUtil.logTimeLoadAdsSplash(activity, round1000(timeLoad));
-                        }
                     }
 
                     @Override
@@ -1233,9 +1208,6 @@ public class Admob {
                         super.onAdClicked();
                         if (disableAdResumeWhenClickAds)
                             AppOpenManager.getInstance().disableAdResumeByClickAction();
-                        if (timeLimitAds > 1000) {
-                            setTimeLimitInter();
-                        }
                         FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
                     }
                 });
@@ -1322,11 +1294,6 @@ public class Admob {
             @Override
             public void onAdShowedFullScreenContent() {
                 isShowLoadingSplash = false;
-                if (logTimeLoadAdsSplash) {
-                    long timeLoad = System.currentTimeMillis() - currentTime;
-                    Log.e(TAG, "load ads time :" + timeLoad);
-                    FirebaseUtil.logTimeLoadAdsSplash(activity, round1000(timeLoad));
-                }
             }
 
             @Override
@@ -1373,9 +1340,6 @@ public class Admob {
                 super.onAdClicked();
                 if (disableAdResumeWhenClickAds)
                     AppOpenManager.getInstance().disableAdResumeByClickAction();
-                if (timeLimitAds > 1000) {
-                    setTimeLimitInter();
-                }
                 FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
             }
         });
@@ -1587,10 +1551,6 @@ public class Admob {
     }
 
     private void showInterAdByTimes(final Context context, InterstitialAd mInterstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
-
-        if (logLogTimeShowAds) {
-            currentTimeShowAds = System.currentTimeMillis();
-        }
         Helper.setupAdmodData(context);
         if (!isShowAllAds) {
             callback.onAdClosed();
@@ -1604,6 +1564,10 @@ public class Admob {
             }
             return;
         }
+       /* if(isShowInter==false){
+            callback.onAdClosed();
+            callback.onNextAction();
+        }*/
 
         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
             @Override
@@ -1653,11 +1617,8 @@ public class Admob {
                 super.onAdShowedFullScreenContent();
                 // Called when fullscreen content is shown.
                 callback.onAdImpression();
-
-                if (logLogTimeShowAds) {
-                    long timeLoad = System.currentTimeMillis() - currentTimeShowAds;
-                    Log.e(TAG, "show ads time :" + timeLoad);
-                    FirebaseUtil.logTimeLoadShowAdsInter(context, (double) timeLoad / 1000);
+                if(timeLimitShowAds>1000){
+                    setTimeLimitInter();
                 }
             }
 
@@ -1667,8 +1628,6 @@ public class Admob {
                 callback.onAdClicked();
                 if (disableAdResumeWhenClickAds)
                     AppOpenManager.getInstance().disableAdResumeByClickAction();
-                if (timeLimitAds > 1000)
-                    setTimeLimitInter();
                 FirebaseUtil.logClickAdsEvent(context, mInterstitialAd.getAdUnitId());
             }
         });
@@ -1681,6 +1640,7 @@ public class Admob {
             callback.onAdClosed();
             callback.onNextAction();
         }
+
     }
 
     private void showInterstitialAd(Context context, InterstitialAd mInterstitialAd, InterCallback callback) {
@@ -1811,9 +1771,6 @@ public class Admob {
                                 super.onAdClicked();
                                 if (disableAdResumeWhenClickAds)
                                     AppOpenManager.getInstance().disableAdResumeByClickAction();
-                                if (timeLimitAds > 1000) {
-                                    setTimeLimitInter();
-                                }
                                 FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
                             }
                         });
@@ -2401,29 +2358,17 @@ public class Admob {
 
 
     private void setTimeLimitInter() {
-        if (timeLimitAds > 1000) {
+        if (timeLimitShowAds > 1000) {
             isShowInter = false;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     isShowInter = true;
                 }
-            }, timeLimitAds);
+            }, timeLimitShowAds);
         }
     }
 
-    private void setTimeLimitBanner() {
-        if (timeLimitAds > 1000) {
-            isShowBanner = false;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    isShowBanner = true;
-                }
-            }, timeLimitAds);
-        }
-
-    }
 
     private void setTimeLimitNative() {
         if (timeLimitAds > 1000) {
@@ -2466,9 +2411,5 @@ public class Admob {
                 }, (long) timeDelay);
             }
         }
-    }
-
-    public int round1000(long time) {
-        return (int) (Math.round(time / 1000));
     }
 }

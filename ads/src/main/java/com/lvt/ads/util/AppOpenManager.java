@@ -37,7 +37,7 @@ import java.util.List;
 
 public class AppOpenManager implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
     private static final String TAG = "AppOpenManager";
-    public static final String AD_UNIT_ID_TEST = "ca-app-pub-3940256099942544/3419835294";
+    public static final String AD_UNIT_ID_TEST = "ca-app-pub-3940256099942544/9257395921";
 
     private static volatile AppOpenManager INSTANCE;
     private AppOpenAd appResumeAd = null;
@@ -903,6 +903,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
+                    Log.e("xxxx load fall : ",loadAdError.toString());
                     listIDResume.remove(0);
                     if (listIDResume.size() == 0) {
                         adCallback.onAdFailedToLoad(loadAdError);

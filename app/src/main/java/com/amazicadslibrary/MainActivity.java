@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         native_ads   = findViewById(R.id.native_ads);
         listID = new ArrayList<>();
         listID.add(getString(R.string.admod_banner_collap_id));
-        AdmobApi.getInstance().loadBanner(this);
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
+        Admob.getInstance().setTimeLimitShowAds(30000);
         loadAdInter();
         loadAdsNative();
 
@@ -58,11 +58,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnClickInter).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmobApi.getInstance().showInterAll(MainActivity.this, new InterCallback() {
+                Admob.getInstance().showInterAds(MainActivity.this,AdsUtil.interAll, new InterCallback() {
                     @Override
                     public void onNextAction() {
                         super.onNextAction();
                         startActivity(new Intent(MainActivity.this,MainActivity3.class));
+                        loadAdInter();
                     }
 
                     @Override
@@ -132,6 +133,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Admob.getInstance().loadBanner(this,getString(R.string.ads_test_banner));
+
+    }
+
     private void loadAdsNative(){
         List<String> listID = new ArrayList<>();
         listID.add("1");
@@ -143,7 +151,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAdInter() {
-        AdmobApi.getInstance().loadInterAll(this,new InterCallback(){});
+        Admob.getInstance().loadInterAds(this,getString(R.string.ads_test_inter),new InterCallback(){
+            @Override
+            public void onAdLoadSuccess(InterstitialAd interstitialAd) {
+                super.onAdLoadSuccess(interstitialAd);
+                AdsUtil.interAll =interstitialAd;
+
+            }
+        });
     }
 
 }

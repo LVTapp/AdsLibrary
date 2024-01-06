@@ -28,7 +28,7 @@ public class MyApplication extends AdsApplication {
 
     @Override
     public String getResumeAdId() {
-        return "ca-app-pub-3940256099942544/3419835294";
+        return "ca-app-pub-3940256099942544/9257395921";
     }
 
     @Override
