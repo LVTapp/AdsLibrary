@@ -27,6 +27,7 @@ public class AdsConsentManager {
     public AdsConsentManager(Activity activity) {
         this.activity = activity;
         this.auAtomicBoolean = new AtomicBoolean(false);
+
     }
 
     public void requestUMP(UMPResultListener umpResultListener) {
