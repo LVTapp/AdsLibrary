@@ -77,9 +77,7 @@ public class Splash extends AppCompatActivity {
         List listID = new ArrayList();
         listID.add("ca-app-pub-3940256099942544/9257395921");
         listID.add("ca-app-pub-3940256099942544/9257395921");
-        ConsentRequestParameters params = new ConsentRequestParameters
-                .Builder()
-                .build();
+
         AdsConsentManager adsConsentManager = new AdsConsentManager(this);
         adsConsentManager.requestUMP(b -> {
             if (b) {
