@@ -11,34 +11,26 @@ import com.google.android.ump.ConsentInformation;
 import com.google.android.ump.ConsentRequestParameters;
 import com.google.android.ump.FormError;
 import com.google.android.ump.UserMessagingPlatform;
-
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 public class AdsConsentManager {
     private static final String TAG = "AdsConsentManager";
     private final Activity activity;
     private final AtomicBoolean auAtomicBoolean;
-
     public interface UMPResultListener {
         public void onCheckUMPSuccess(boolean result);
     }
-
     public AdsConsentManager(Activity activity) {
         this.activity = activity;
         this.auAtomicBoolean = new AtomicBoolean(false);
 
     }
-
     public void requestUMP(UMPResultListener umpResultListener) {
         this.requestUMP(false, "839C81F23CA740E42DE16EDA86357D2B", false, umpResultListener);
     }
-
     public static boolean getConsentResult(Context context) {
         String consentResult = context.getSharedPreferences(context.getPackageName() + "_preferences", 0).getString("IABTCF_PurposeConsents", "");
         return consentResult.isEmpty() || String.valueOf(consentResult.charAt(0)).equals("1");
     }
-
     public void requestUMP(Boolean enableDebug, String testDevice, Boolean resetData, UMPResultListener umpResultListener) {
         ConsentDebugSettings debugSettings = new ConsentDebugSettings.Builder(activity)
                 .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
