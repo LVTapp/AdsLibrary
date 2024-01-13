@@ -403,7 +403,8 @@ public class Admob {
     public void loadBannerFragmentFloor(final Activity mActivity, List<String> listID, final View rootView) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
-
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -430,7 +431,8 @@ public class Admob {
     public void loadBannerFragmentFloor(final Activity mActivity, List<String> listID, final View rootView, BannerCallBack bannerCallBack) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
-
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -460,6 +462,8 @@ public class Admob {
     public void loadBannerFragment(final Activity mActivity, String id, final View rootView) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -474,6 +478,8 @@ public class Admob {
     public void loadBannerFragment(final Activity mActivity, String id, final View rootView, final BannerCallBack callback) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -488,6 +494,8 @@ public class Admob {
     public void loadBannerFragment(final Activity mActivity, String id, final View rootView, Boolean useInlineAdaptive) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -516,6 +524,8 @@ public class Admob {
     public void loadBannerFragment(final Activity mActivity, String id, final View rootView, final BannerCallBack callback, Boolean useInlineAdaptive) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -530,6 +540,8 @@ public class Admob {
     public void loadInlineBannerFragment(final Activity activity, String id, final View rootView, String inlineStyle, final BannerCallBack callback) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
