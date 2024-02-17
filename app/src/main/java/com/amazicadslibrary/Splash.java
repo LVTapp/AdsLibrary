@@ -16,6 +16,7 @@ import com.lvt.ads.callback.AdCallback;
 import com.lvt.ads.callback.ApiCallBack;
 import com.lvt.ads.service.AdmobApi;
 import com.lvt.ads.util.Admob;
+import com.lvt.ads.util.AdsConsentManager;
 import com.lvt.ads.util.AppOpenManager;
 
 import java.util.ArrayList;
