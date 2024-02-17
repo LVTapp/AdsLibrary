@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
         listID = new ArrayList<>();
         listID.add(getString(R.string.admod_banner_collap_id));
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
-        Admob.getInstance().setTimeLimitShowAds(30000);
-        loadAdInter();
+        //Admob.getInstance().setTimeLimitShowAds(30000);
         loadAdsNative();
 
         findViewById(R.id.clickFGM).setOnClickListener(new View.OnClickListener() {
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnClickInter).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admob.getInstance().showInterAds(MainActivity.this,AdsUtil.interAll, new InterCallback() {
+                Admob.getInstance().showInterAll(MainActivity.this, new InterCallback() {
                     @Override
                     public void onNextAction() {
                         super.onNextAction();
@@ -112,31 +111,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        findViewById(R.id.btnClickLoadAndShow).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Admob.getInstance().loadAndShowInter(MainActivity.this,getString(R.string.admod_interstitial_id),0,10000, new InterCallback(){
-                    @Override
-                    public void onAdClosed() {
-                        super.onAdClosed();
-                        startActivity(new Intent(MainActivity.this,MainActivity2.class));
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError i) {
-                        super.onAdFailedToLoad(i);
-                        startActivity(new Intent(MainActivity.this,MainActivity2.class));
-                    }
-                });
-            }
-        });
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Admob.getInstance().loadBanner(this,getString(R.string.ads_test_banner));
+        Admob.getInstance().loadBannerFragment(this,getString(R.string.ads_test_banner),native_ads.getRootView());
+        loadAdInter();
 
     }
 
@@ -151,14 +133,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAdInter() {
-        Admob.getInstance().loadInterAds(this,getString(R.string.ads_test_inter),new InterCallback(){
-            @Override
-            public void onAdLoadSuccess(InterstitialAd interstitialAd) {
-                super.onAdLoadSuccess(interstitialAd);
-                AdsUtil.interAll =interstitialAd;
-
-            }
-        });
+        Admob.getInstance().loadInterAll(this,getString(R.string.ads_test_inter));
     }
 
 }

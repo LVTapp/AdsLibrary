@@ -228,7 +228,7 @@ public class AdmobApi {
     }
     public void loadInterAll(final Activity activity) {
         if (interAll == null)
-            Admob.getInstance().loadInterAdsFloor(activity, getListIDInterAll(), new InterCallback() {
+            Admob.getInstance().loadInterAds(activity, getListIDInterAll(), new InterCallback() {
                 @Override
                 public void onAdLoadSuccess(InterstitialAd interstitialAd) {
                     super.onAdLoadSuccess(interstitialAd);
@@ -239,7 +239,7 @@ public class AdmobApi {
 
     public void loadInterAll(final Activity activity,InterCallback interCallback) {
         if (interAll == null){
-            Admob.getInstance().loadInterAdsFloor(activity, getListIDInterAll(), new InterCallback() {
+            Admob.getInstance().loadInterAds(activity, getListIDInterAll(), new InterCallback() {
                 @Override
                 public void onAdLoadSuccess(InterstitialAd interstitialAd) {
                     super.onAdLoadSuccess(interstitialAd);

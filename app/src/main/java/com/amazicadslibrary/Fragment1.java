@@ -20,7 +20,7 @@ public class Fragment1 extends Fragment {
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1,container,false);
-        Admob.getInstance().loadCollapsibleBannerFragmentFloor(requireActivity(),MainActivity.listID,view, BannerGravity.bottom);
+        Admob.getInstance().loadCollapsibleBannerFragment(requireActivity(),MainActivity.listID,view, BannerGravity.bottom);
         return view;
 
     }
