@@ -89,6 +89,10 @@ public class Admob {
 
     private RewardedAd rewardedAd;
     private String rewardedId;
+    private String checkDeviceTest = "Test ad";
+    public static boolean isShowAdsDevice = false;
+    public static boolean isDeviceTest = false;
+
     InterstitialAd mInterstitialSplash;
     InterstitialAd interstitialAd;
     private boolean disableAdResumeWhenClickAds = false;
@@ -168,10 +172,13 @@ public class Admob {
     public void setOpenShowAllAds(boolean isShowAllAds) {
         this.isShowAllAds = isShowAllAds;
     }
-    
-    /**=================================Banner ======================================**/
-    /** Load ads Banner Trong Activity  **/
+    public void setShowAdsDeviceTest(boolean isShowAds) {
+        this.isShowAdsDevice = isShowAds;
+    }
 
+    /**=========
+     * ========================Banner ======================================**/
+    /** Load ads Banner Trong Activity  **/
 
     /**  load banner in Activity **/
     public void loadBanner(final Activity mActivity, String id) {
@@ -179,7 +186,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -199,7 +206,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -215,7 +222,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -245,7 +252,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -277,7 +284,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -302,7 +309,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -316,7 +323,7 @@ public class Admob {
     public void loadInlineBanner(final Activity activity, String id, String inlineStyle, final BannerCallBack callback) {
         final FrameLayout adContainer = activity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = activity.findViewById(R.id.shimmer_container_banner);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -332,7 +339,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -348,7 +355,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -365,7 +372,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -398,7 +405,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -431,7 +438,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -461,7 +468,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -492,7 +499,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -508,7 +515,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -524,7 +531,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -540,7 +547,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -556,7 +563,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -572,7 +579,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -596,7 +603,7 @@ public class Admob {
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
         adContainer.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
@@ -1863,7 +1870,7 @@ public class Admob {
 
     public void loadNativeAd(Context context, String id, final NativeCallback callback) {
         Log.e("Load native id ", id);
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             callback.onAdFailedToLoad();
         } else {
             if (isShowNative) {
@@ -1918,7 +1925,7 @@ public class Admob {
     }
 
     public void loadNativeAd(Context context, String id, FrameLayout frameLayout, int layoutNative) {
-        if (!isShowAllAds || !isNetworkConnected()) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
             frameLayout.removeAllViews();
             return;
         }
@@ -1980,6 +1987,11 @@ public class Admob {
 
     /* =============================  Native Ads Floor  ==========================================*/
     public void loadNativeAd(Context context, List<String> listID, final NativeCallback callback) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
+            listID.clear();
+            callback.onAdFailedToLoad();
+            return;
+        }
         if (listID == null) {
             callback.onAdFailedToLoad();
         } else if (listID.size() == 0) {
@@ -2019,26 +2031,13 @@ public class Admob {
             });
         }
     }
-
-    private void loadNativeAdFloor(Context context, List<String> listID, final NativeCallback callback) {
-        if (listID == null || listID.size() == 0) {
-            callback.onAdFailedToLoad();
-        } else {
-            if (!isShowAllAds || !isNetworkConnected()) {
-                callback.onAdFailedToLoad();
-                return;
-            }
-            if (listID.size() > 0) {
-                int position = 0;
-                Log.e(TAG, "Load Native ID :" + listID.get(position));
-                loadNativeAd(context, listID.get(position), callback);
-            } else {
-                callback.onAdFailedToLoad();
-            }
-        }
-    }
-
+    
     public void loadNativeAd(Context context, List<String> listID, FrameLayout frameLayout, int layoutNative) {
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
+            listID.clear();
+            frameLayout.removeAllViews();
+            return;
+        }
         if (listID == null || listID.size() == 0) {
             frameLayout.removeAllViews();
         } else {
@@ -2053,6 +2052,10 @@ public class Admob {
                     NativeAdView adView = (NativeAdView) LayoutInflater.from(context).inflate(layoutNative, null);
                     frameLayout.removeAllViews();
                     frameLayout.addView(adView);
+                    if(checkDeviceTest(nativeAd,listID.get(0))){
+                        frameLayout.removeAllViews();
+                        return;
+                    }
                     Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
                     nativeAd.setOnPaidEventListener(adValue -> {
                         Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
@@ -2208,7 +2211,7 @@ public class Admob {
 
 
     private void loadNative(final Context context, final ShimmerFrameLayout containerShimmer, final FrameLayout frameLayout, final String id, final int layout) {
-        if (!isNetworkConnected() || !isShowAllAds) {
+        if (!isNetworkConnected() || !isShowAllAds||isDeviceTest) {
             containerShimmer.setVisibility(View.GONE);
             return;
         }
@@ -2319,6 +2322,15 @@ public class Admob {
         } catch (NoSuchAlgorithmException e) {
         }
         return "";
+    }
+
+    private boolean checkDeviceTest(NativeAd nativeAd,String id){
+        if(id.equals(id)||isShowAdsDevice){return false;}
+        if(nativeAd.getHeadline().toLowerCase().contains(checkDeviceTest.toLowerCase())){
+            isDeviceTest = true;
+            return true;
+        }
+        return false;
     }
 
     /* ============================= END GET  INFO DEVICE  ==========================================*/
