@@ -90,7 +90,9 @@ public class Admob {
     private RewardedAd rewardedAd;
     private String rewardedId;
     private String checkDeviceTest = "Test ad";
-    public static boolean isShowAdsDevice = false;
+    public static boolean isShowAdsDeviceTest = true;
+    //true : show ads
+    //false : hide ads
     public static boolean isDeviceTest = false;
 
     InterstitialAd mInterstitialSplash;
@@ -108,7 +110,7 @@ public class Admob {
     private boolean checkLoadBannerCollap = false;
 
     private long timeLimitShowAds = 0;
-
+    String adsTestNative = "ca-app-pub-3940256099942544/2247696110";
     public static Admob getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Admob();
@@ -173,7 +175,7 @@ public class Admob {
         this.isShowAllAds = isShowAllAds;
     }
     public void setShowAdsDeviceTest(boolean isShowAds) {
-        this.isShowAdsDevice = isShowAds;
+        this.isShowAdsDeviceTest = isShowAds;
     }
 
     /**=========
@@ -1908,7 +1910,7 @@ public class Admob {
                                     callback.onAdClicked();
                                     if (disableAdResumeWhenClickAds)
                                         AppOpenManager.getInstance().disableAdResumeByClickAction();
-                                    FirebaseUtil.logClickAdsEvent(context, id);
+                                       FirebaseUtil.logClickAdsEvent(context, id);
                                 }
                             })
                             .withNativeAdOptions(adOptions)
@@ -2325,7 +2327,7 @@ public class Admob {
     }
 
     private boolean checkDeviceTest(NativeAd nativeAd,String id){
-        if(id.equals(id)||isShowAdsDevice){return false;}
+        if(id.equals(adsTestNative)||isShowAdsDeviceTest){return false;}
         if(nativeAd.getHeadline().toLowerCase().contains(checkDeviceTest.toLowerCase())){
             isDeviceTest = true;
             return true;
