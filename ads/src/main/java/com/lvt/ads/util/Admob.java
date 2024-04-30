@@ -90,7 +90,7 @@ public class Admob {
     private RewardedAd rewardedAd;
     private String rewardedId;
     private String checkDeviceTest = "Test ad";
-    public static boolean isShowAdsDeviceTest = true;
+    public static boolean isShowAdsDeviceTest = false;
     //true : show ads
     //false : hide ads
     public static boolean isDeviceTest = false;
@@ -1886,7 +1886,12 @@ public class Admob {
                             .build();
                     AdLoader adLoader = new AdLoader.Builder(context, id)
                             .forNativeAd(nativeAd -> {
-                                callback.onNativeAdLoaded(nativeAd);
+                                if(!checkDeviceTest(nativeAd,id)){
+                                    callback.onNativeAdLoaded(nativeAd);
+                                }else{
+                                    callback.onAdFailedToLoad();
+                                }
+
                                 nativeAd.setOnPaidEventListener(adValue -> {
                                     Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
                                     FirebaseUtil.logPaidAdImpression(context,
@@ -1947,8 +1952,10 @@ public class Admob {
                             public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
                                 NativeAdView adView = (NativeAdView) LayoutInflater.from(context).inflate(layoutNative, null);
                                 frameLayout.removeAllViews();
-                                frameLayout.addView(adView);
-                                Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                                if(!checkDeviceTest(nativeAd,id)){
+                                    frameLayout.addView(adView);
+                                    Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                                }
                                 nativeAd.setOnPaidEventListener(adValue -> {
                                     Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
                                     FirebaseUtil.logPaidAdImpression(context,
@@ -2011,7 +2018,12 @@ public class Admob {
                 @Override
                 public void onNativeAdLoaded(NativeAd nativeAd) {
                     super.onNativeAdLoaded(nativeAd);
-                    callback.onNativeAdLoaded(nativeAd);
+                    if(checkDeviceTest(nativeAd,listIDNew.get(0))){
+                        callback.onAdFailedToLoad();
+                    }else{
+                        callback.onNativeAdLoaded(nativeAd);
+                    }
+
                 }
 
                 @Override
@@ -2054,19 +2066,17 @@ public class Admob {
                     super.onNativeAdLoaded(nativeAd);
                     NativeAdView adView = (NativeAdView) LayoutInflater.from(context).inflate(layoutNative, null);
                     frameLayout.removeAllViews();
-                    frameLayout.addView(adView);
-                    if(checkDeviceTest(nativeAd,listID.get(0))){
-                        frameLayout.removeAllViews();
-                        return;
+                    if(!checkDeviceTest(nativeAd,listID.get(0))){
+                        frameLayout.addView(adView);
+                        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                        nativeAd.setOnPaidEventListener(adValue -> {
+                            Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                            FirebaseUtil.logPaidAdImpression(context,
+                                    adValue,
+                                    listID.get(0),
+                                    AdType.NATIVE);
+                        });
                     }
-                    Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
-                    nativeAd.setOnPaidEventListener(adValue -> {
-                        Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
-                        FirebaseUtil.logPaidAdImpression(context,
-                                adValue,
-                                listID.get(0),
-                                AdType.NATIVE);
-                    });
                 }
 
                 @Override
@@ -2213,71 +2223,6 @@ public class Admob {
     }
 
 
-    private void loadNative(final Context context, final ShimmerFrameLayout containerShimmer, final FrameLayout frameLayout, final String id, final int layout) {
-        if (!isNetworkConnected() || !isShowAllAds||isDeviceTest) {
-            containerShimmer.setVisibility(View.GONE);
-            return;
-        }
-        frameLayout.removeAllViews();
-        frameLayout.setVisibility(View.GONE);
-        containerShimmer.setVisibility(View.VISIBLE);
-        containerShimmer.startShimmer();
-
-        VideoOptions videoOptions = new VideoOptions.Builder()
-                .setStartMuted(true)
-                .build();
-
-        NativeAdOptions adOptions = new NativeAdOptions.Builder()
-                .setVideoOptions(videoOptions)
-                .build();
-
-
-        AdLoader adLoader = new AdLoader.Builder(context, id)
-                .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
-                    @Override
-                    public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
-                        containerShimmer.stopShimmer();
-                        containerShimmer.setVisibility(View.GONE);
-                        frameLayout.setVisibility(View.VISIBLE);
-                        @SuppressLint("InflateParams") NativeAdView adView = (NativeAdView) LayoutInflater.from(context)
-                                .inflate(layout, null);
-                        pushAdsToViewCustom(nativeAd, adView);
-                        frameLayout.removeAllViews();
-                        frameLayout.addView(adView);
-                        nativeAd.setOnPaidEventListener(adValue -> {
-                            Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
-                            FirebaseUtil.logPaidAdImpression(context,
-                                    adValue,
-                                    id,
-                                    AdType.NATIVE);
-                        });
-                    }
-
-
-                })
-                .withAdListener(new AdListener() {
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError error) {
-                        Log.e(TAG, "onAdFailedToLoad: " + error.getMessage());
-                        containerShimmer.stopShimmer();
-                        containerShimmer.setVisibility(View.GONE);
-                        frameLayout.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAdClicked() {
-                        super.onAdClicked();
-                        if (disableAdResumeWhenClickAds)
-                            AppOpenManager.getInstance().disableAdResumeByClickAction();
-                        FirebaseUtil.logClickAdsEvent(context, id);
-                    }
-
-                })
-                .withNativeAdOptions(adOptions)
-                .build();
-
-        adLoader.loadAd(getAdRequest());
-    }
     /* =============================  End Native Ads ==========================================*/
 
 
@@ -2330,10 +2275,12 @@ public class Admob {
     private boolean checkDeviceTest(NativeAd nativeAd,String id){
         if(id.equals(adsTestNative)||isShowAdsDeviceTest){return false;}
         if(nativeAd.getHeadline().toLowerCase().contains(checkDeviceTest.toLowerCase())){
+            setOpenShowAllAds(false);
             isDeviceTest = true;
             return true;
+        }else{
+            return false;
         }
-        return false;
     }
 
     /* ============================= END GET  INFO DEVICE  ==========================================*/
