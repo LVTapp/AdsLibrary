@@ -69,6 +69,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Admob {
     private static Admob INSTANCE;
@@ -1008,6 +1009,7 @@ public class Admob {
         AdRequest.Builder builder = new AdRequest.Builder();
         Bundle admobExtras = new Bundle();
         admobExtras.putString("collapsible", gravity);
+        admobExtras.putString("collapsible_request_id", UUID.randomUUID().toString());
         builder.addNetworkExtrasBundle(AdMobAdapter.class, admobExtras);
         return builder.build();
     }
@@ -1913,9 +1915,11 @@ public class Admob {
                                     super.onAdClicked();
                                     Log.e(TAG, "NativeAd onAdClicked: ");
                                     callback.onAdClicked();
-                                    if (disableAdResumeWhenClickAds)
+                                    if(disableAdResumeWhenClickAds){
                                         AppOpenManager.getInstance().disableAdResumeByClickAction();
-                                       FirebaseUtil.logClickAdsEvent(context, id);
+                                    }
+                                    FirebaseUtil.logClickAdsEvent(context, id);
+
                                 }
                             })
                             .withNativeAdOptions(adOptions)

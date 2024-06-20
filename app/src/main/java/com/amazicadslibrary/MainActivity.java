@@ -14,7 +14,6 @@ import com.lvt.ads.callback.NativeCallback;
 import com.lvt.ads.callback.PurchaseListioner;
 import com.lvt.ads.callback.RewardCallback;
 import com.lvt.ads.callback.InterCallback;
-import com.lvt.ads.service.AdmobApi;
 import com.lvt.ads.util.Admob;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        Admob.getInstance().loadCollapsibleBanner(this,getString(R.string.ads_test_banner_collap));
 
 
 
@@ -117,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Admob.getInstance().loadBannerFragment(this,getString(R.string.ads_test_banner),native_ads.getRootView());
         loadAdInter();
 
     }

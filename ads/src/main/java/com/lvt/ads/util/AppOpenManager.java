@@ -22,7 +22,6 @@ import com.lvt.ads.dialog.ResumeLoadingDialog;
 import com.lvt.ads.event.AdType;
 import com.lvt.ads.event.AdmobEvent;
 import com.lvt.ads.event.FirebaseUtil;
-import com.lvt.ads.service.AdmobApi;
 import com.google.android.gms.ads.AdActivity;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
