@@ -8,7 +8,7 @@
         android:background="@color/distance"
         android:id="@+id/banner_distance"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="2dp"
         android:orientation="horizontal" />
     <FrameLayout
         android:layout_below="@+id/banner_distance"
