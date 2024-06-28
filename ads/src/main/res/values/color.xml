@@ -20,6 +20,7 @@
     <color name="gntTestBackgroundColor2">#00A3A3A3</color>
     <color name="gntBlack">#000000</color>
     <color name="black">#000000</color>
+    <color name="distance">#D1D1D1</color>
     <color name="gntWhite">#FFFFFF</color>
     <color name="gntRed">#FF0000</color>
     <color name="gntGreen">#00FF00</color>

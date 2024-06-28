@@ -806,6 +806,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
 
     public void loadOpenAppAdSplash(Context context, String idResumeSplash, long timeDelay, long timeOut, boolean isShowAdIfReady, AdCallback adCallback) {
+
         this.splashAdId = idResumeSplash;
         if(!isNetworkConnected(context)||!Admob.isShowAllAds){
             new Handler().postDelayed(new Runnable() {
@@ -870,66 +871,72 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     }
 
     public void loadOpenAppAdSplash(Context context, List<String> listIDResume, boolean isShowAdIfReady, AdCallback adCallback) {
-        if(!isNetworkConnected(context)||!Admob.isShowAllAds){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
+        AdsConsentManager adsConsentManager = new AdsConsentManager((Activity) context);
+        adsConsentManager.requestUMP(b -> {
+            if (b) {
+                Admob.getInstance().initAdmob(context, null);
+            }
+            if(!isNetworkConnected(context)||!Admob.isShowAllAds){
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        adCallback.onAdFailedToLoad(null);
+                        adCallback.onNextAction();
+                    }
+                },3000);
+            }else{
+                if (listIDResume == null) {
                     adCallback.onAdFailedToLoad(null);
                     adCallback.onNextAction();
+                    return;
                 }
-            },3000);
-        }else{
-            if (listIDResume == null) {
-                adCallback.onAdFailedToLoad(null);
-                adCallback.onNextAction();
-                return;
-            }
-            if (listIDResume.isEmpty()) {
-                adCallback.onAdFailedToLoad(null);
-                adCallback.onNextAction();
-                return;
-            }
-            if(listIDResume.size()>0){
-                Log.e("AppOpenManager", "load ID :" + listIDResume.get(0));
-            }
-            if (listIDResume.size() < 1) {
-                adCallback.onAdFailedToLoad(null);
-                adCallback.onNextAction();
-                return;
-            }
-            AdRequest adRequest = getAdRequest();
-            AppOpenAd.AppOpenAdLoadCallback appOpenAdLoadCallback = new AppOpenAd.AppOpenAdLoadCallback() {
-                @Override
-                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                    super.onAdFailedToLoad(loadAdError);
-                    Log.e("xxxx load fall : ",loadAdError.toString());
-                    listIDResume.remove(0);
-                    if (listIDResume.size() == 0) {
-                        adCallback.onAdFailedToLoad(loadAdError);
-                        adCallback.onNextAction();
-                    } else {
-                        loadOpenAppAdSplash(context, listIDResume, isShowAdIfReady, adCallback);
+                if (listIDResume.isEmpty()) {
+                    adCallback.onAdFailedToLoad(null);
+                    adCallback.onNextAction();
+                    return;
+                }
+                if(listIDResume.size()>0){
+                    Log.e("AppOpenManager", "load ID :" + listIDResume.get(0));
+                }
+                if (listIDResume.size() < 1) {
+                    adCallback.onAdFailedToLoad(null);
+                    adCallback.onNextAction();
+                    return;
+                }
+                AdRequest adRequest = getAdRequest();
+                AppOpenAd.AppOpenAdLoadCallback appOpenAdLoadCallback = new AppOpenAd.AppOpenAdLoadCallback() {
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        super.onAdFailedToLoad(loadAdError);
+                        Log.e("xxxx load fall : ",loadAdError.toString());
+                        listIDResume.remove(0);
+                        if (listIDResume.size() == 0) {
+                            adCallback.onAdFailedToLoad(loadAdError);
+                            adCallback.onNextAction();
+                        } else {
+                            loadOpenAppAdSplash(context, listIDResume, isShowAdIfReady, adCallback);
+                        }
                     }
-                }
-                @Override
-                public void onAdLoaded(@NonNull AppOpenAd appOpenAd) {
-                    super.onAdLoaded(appOpenAd);
-                    AppOpenManager.this.splashAd = appOpenAd;
-                    AppOpenManager.this.splashAd.setOnPaidEventListener((adValue) -> {
-                        FirebaseUtil.logPaidAdImpression(myApplication.getApplicationContext(),
-                                adValue,
-                                appOpenAd.getAdUnitId(),
-                                AdType.APP_OPEN);
-                    });
-                    if (isShowAdIfReady) {
-                        AppOpenManager.this.showAppOpenSplash(context, adCallback);
-                    } else {
-                        adCallback.onAdSplashReady();
+                    @Override
+                    public void onAdLoaded(@NonNull AppOpenAd appOpenAd) {
+                        super.onAdLoaded(appOpenAd);
+                        AppOpenManager.this.splashAd = appOpenAd;
+                        AppOpenManager.this.splashAd.setOnPaidEventListener((adValue) -> {
+                            FirebaseUtil.logPaidAdImpression(myApplication.getApplicationContext(),
+                                    adValue,
+                                    appOpenAd.getAdUnitId(),
+                                    AdType.APP_OPEN);
+                        });
+                        if (isShowAdIfReady) {
+                            AppOpenManager.this.showAppOpenSplash(context, adCallback);
+                        } else {
+                            adCallback.onAdSplashReady();
+                        }
                     }
-                }
-            };
-            AppOpenAd.load(context, listIDResume.get(0), adRequest, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, appOpenAdLoadCallback);
-        }
+                };
+                AppOpenAd.load(context, listIDResume.get(0), adRequest, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, appOpenAdLoadCallback);
+            }
+        });
     }
 
     public void onCheckShowSplashWhenFail(final AppCompatActivity activity, final AdCallback callback, int timeDelay) {

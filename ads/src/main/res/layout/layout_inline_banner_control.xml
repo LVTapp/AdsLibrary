@@ -4,8 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
     <FrameLayout
+        android:background="@color/distance"
+        android:id="@+id/banner_distance"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:orientation="horizontal" />
+    <FrameLayout
+        android:layout_below="@+id/banner_distance"
         android:id="@+id/banner_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,6 +19,7 @@
         android:visibility="gone"
         />
     <FrameLayout
+        android:layout_below="@+id/banner_distance"
         android:id="@+id/fl_shimemr"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
