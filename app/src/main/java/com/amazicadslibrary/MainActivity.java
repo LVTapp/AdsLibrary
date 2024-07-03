@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.lvt.ads.callback.BannerCallBack;
 import com.lvt.ads.callback.NativeCallback;
 import com.lvt.ads.callback.PurchaseListioner;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         native_ads   = findViewById(R.id.native_ads);
         listID = new ArrayList<>();
         listID.add(getString(R.string.admod_banner_collap_id));
-        Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
+       // Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
         //Admob.getInstance().setTimeLimitShowAds(30000);
         loadAdsNative();
 
@@ -83,7 +84,38 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnClickReward).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admob.getInstance().showRewardAds(MainActivity.this,new RewardCallback(){
+                Admob.getInstance().loadAndShowRewardAds(MainActivity.this, getString(R.string.admod_app_reward_id), new RewardCallback() {
+                    @Override
+                    public void onEarnedReward(RewardItem rewardItem) {
+                            Log.e("xxxxx","onEarnedReward");
+                    }
+
+                    @Override
+                    public void onAdClosed() {
+                        Log.e("xxxxx","onAdClosed");
+                    }
+
+                    @Override
+                    public void onAdFailedToShow(int codeError) {
+                        Log.e("xxxxx","onAdFailedToShow");
+                    }
+
+                    @Override
+                    public void onAdImpression() {
+                        Log.e("xxxxx","onAdImpression");
+                    }
+
+                    @Override
+                    public void onAdLoaded(RewardedAd rewardedAd) {
+                        Log.e("xxxxx","onAdLoaded");
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad() {
+                        Log.e("xxxxx","onAdFailedToLoad");
+                    }
+                });
+                /*Admob.getInstance().showRewardAds(MainActivity.this,new RewardCallback(){
                     @Override
                     public void onEarnedReward(RewardItem rewardItem) {
                         Toast.makeText(MainActivity.this,"Trả thưởng thành công",Toast.LENGTH_SHORT).show();
@@ -103,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onAdImpression() {
                         Toast.makeText(MainActivity.this,"onAdImpression",Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
+
             }
         });
 
