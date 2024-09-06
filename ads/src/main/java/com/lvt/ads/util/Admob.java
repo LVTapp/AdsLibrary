@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
@@ -18,6 +19,7 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -95,7 +97,7 @@ public class Admob {
     //true : show ads
     //false : hide ads
     public static boolean isDeviceTest = false;
-
+    private CountDownTimer countDownTimer;
     InterstitialAd mInterstitialSplash;
     InterstitialAd interstitialAd;
     private boolean disableAdResumeWhenClickAds = false;
@@ -365,7 +367,29 @@ public class Admob {
             loadCollapsibleBanner(mActivity, id, BannerGravity.bottom, adContainer, containerShimmer);
         }
     }
-
+    public void loadCollapsibleBanner(final Activity mActivity, String id,int timeDelay) {
+        final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
+        final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        destroyCollapse(adContainer);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
+        if (!isShowAllAds || !isNetworkConnected()||isDeviceTest) {
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+        } else {
+            loadCollapsibleBanner(mActivity, id, BannerGravity.bottom, adContainer, containerShimmer,timeDelay,id);
+        }
+    }
+    private void destroyCollapse(ViewGroup viewGroup) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child = viewGroup.getChildAt(i);
+            if (child instanceof AdView) {
+                ((AdView) child).destroy();
+            } else if (child instanceof ViewGroup) {
+                destroyCollapse((ViewGroup) child);
+            }
+        }
+    }
 
     /**
      * Load ads Collapsible Banner Trong Activity By List
@@ -853,7 +877,76 @@ public class Admob {
             e.printStackTrace();
         }
     }
+    private void loadCollapsibleBanner(final Activity mActivity, String id, String gravity, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer,int timeDelay,String idAds) {
+        if (!isNetworkConnected()) {
+            containerShimmer.setVisibility(View.GONE);
+            return;
+        }
 
+        containerShimmer.setVisibility(View.VISIBLE);
+        containerShimmer.startShimmer();
+        try {
+            AdView adView = new AdView(mActivity);
+            adView.setAdUnitId(id);
+            adContainer.addView(adView);
+            AdSize adSize = getAdSize(mActivity, false, "");
+            containerShimmer.getLayoutParams().height = (int) (adSize.getHeight() * Resources.getSystem().getDisplayMetrics().density + 0.5f);
+            adView.setAdSize(adSize);
+            adView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            adView.loadAd(getAdRequestForCollapsibleBanner(gravity));
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    super.onAdFailedToLoad(loadAdError);
+                    containerShimmer.stopShimmer();
+                    adContainer.setVisibility(View.GONE);
+                    containerShimmer.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAdImpression() {
+                    super.onAdImpression();
+                    countDownTimer = new CountDownTimer(timeDelay,1000) {
+                        @Override
+                        public void onTick(long l) {
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            loadCollapsibleBanner( mActivity, id,timeDelay);
+                        }
+                    };
+                    countDownTimer.start();
+                }
+
+                @Override
+                public void onAdLoaded() {
+                    Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
+                    containerShimmer.stopShimmer();
+                    containerShimmer.setVisibility(View.GONE);
+                    adContainer.setVisibility(View.VISIBLE);
+                    adView.setOnPaidEventListener(adValue -> {
+                        Log.d(TAG, "OnPaidEvent banner:" + adValue.getValueMicros());
+
+                        FirebaseUtil.logPaidAdImpression(context,
+                                adValue,
+                                adView.getAdUnitId(), AdType.BANNER);
+                    });
+
+                }
+
+                @Override
+                public void onAdClicked() {
+                    super.onAdClicked();
+                    if (disableAdResumeWhenClickAds)
+                        AppOpenManager.getInstance().disableAdResumeByClickAction();
+                    FirebaseUtil.logClickAdsEvent(context, id);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void loadCollapsibleBannerFloor(final Activity mActivity, List<String> listId, String gravity, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer) {
         if (checkLoadBannerCollap) {
             return;

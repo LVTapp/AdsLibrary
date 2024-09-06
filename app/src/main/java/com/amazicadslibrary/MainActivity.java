@@ -3,12 +3,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.lvt.ads.callback.BannerCallBack;
 import com.lvt.ads.callback.NativeCallback;
@@ -21,6 +24,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
+import com.lvt.ads.util.BannerGravity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
     public static String PRODUCT_ID_YEAR = "android.test.purchased";
     public static String PRODUCT_ID_MONTH = "android.test.purchased";
     public static  List<String> listID;
-
-
+    Runnable runnable;
+    Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,17 +144,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Admob.getInstance().loadCollapsibleBanner(this,getString(R.string.ads_test_banner_collap));
 
-
-
+        Admob.getInstance().loadCollapsibleBanner(MainActivity.this,getString(R.string.admod_banner_collap_id),10000);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         loadAdInter();
-
     }
 
     private void loadAdsNative(){
