@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         listID.add(getString(R.string.admod_banner_collap_id));
        // Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
         //Admob.getInstance().setTimeLimitShowAds(30000);
-        loadAdsNative();
+       // loadAdsNative();
 
         findViewById(R.id.clickFGM).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,MainActivity2.class));
             }
         });
-
+        loadAdsNative();
 
 
         findViewById(R.id.btnClickInter).setOnClickListener(new View.OnClickListener() {
@@ -145,13 +145,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        Admob.getInstance().loadCollapsibleBanner(MainActivity.this,getString(R.string.admod_banner_collap_id),10000);
+        Admob.getInstance().loadCollapsibleBanner(MainActivity.this,getString(R.string.admod_banner_collap_id),50000);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         loadAdInter();
+
     }
 
     private void loadAdsNative(){
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         listID.add("1");
         listID.add("2");
         listID.add(getString(R.string.ads_test_native));
-        Admob.getInstance().loadNativeAd(this, listID, native_ads,R.layout.ads_native_btn_ads_bot);
+        Admob.getInstance().loadNativeAdHide(this, getString(R.string.ads_test_native), native_ads,R.layout.ads_native_hide_small_top,10000);
 
         //Admob.getInstance().loadNativeAd(this, "id native", native_ads,R.layout.ads_native);
     }
