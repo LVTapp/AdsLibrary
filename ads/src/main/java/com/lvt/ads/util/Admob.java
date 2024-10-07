@@ -115,7 +115,7 @@ public class Admob {
     private boolean checkLoadBannerCollap = false;
 
     private long timeLimitShowAds = 0;
-    String adsTestNative = "ca-app-pub-3940256099942544/2247696110";
+    String adsTestNative = "ca-app-pub-3940256099942544/1044960115";
 
     public static Admob getInstance() {
         if (INSTANCE == null) {
@@ -2526,13 +2526,15 @@ public class Admob {
                             if (!checkDeviceTest(nativeAd, id)) {
                                 frameLayout.addView(adView);
                                 Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
-                               // try {
+                                try {
                                     ImageView imgNativeAd = adView.findViewById(R.id.iv_down);
-                                    imgNativeAd.setVisibility(View.VISIBLE);
-                                    imgNativeAd.setOnClickListener(v -> {
-                                        adView.findViewById(R.id.rl_collap).setVisibility(View.GONE);
-                                    });
-                               // } catch (Exception e) {}
+                                    if(imgNativeAd!=null){
+                                        imgNativeAd.setVisibility(View.VISIBLE);
+                                        imgNativeAd.setOnClickListener(v -> {
+                                            adView.findViewById(R.id.rl_collap).setVisibility(View.GONE);
+                                        });
+                                    }
+                                } catch (Exception e) {}
                             }
                             nativeAd.setOnPaidEventListener(adValue -> {
                                 Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());

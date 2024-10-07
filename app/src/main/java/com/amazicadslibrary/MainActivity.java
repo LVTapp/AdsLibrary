@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         listID.add("1");
         listID.add("2");
         listID.add(getString(R.string.ads_test_native));
-        Admob.getInstance().loadNativeAdHide(this, getString(R.string.ads_test_native), native_ads,R.layout.ads_native_hide_small_top,10000);
+        Admob.getInstance().loadNativeAdHide(this, "ca-app-pub-3940256099942544/1044960115", native_ads,R.layout.ads_native_hide_small_top,10000);
 
         //Admob.getInstance().loadNativeAd(this, "id native", native_ads,R.layout.ads_native);
     }
