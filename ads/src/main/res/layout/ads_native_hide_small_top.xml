@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="@string/offline_notification_text"
+                        android:text=""
                         android:textColor="@android:color/black"
                         android:textSize="10dp" />
 
@@ -75,6 +75,7 @@
                         <TextView
                             style="@style/AppTheme.Ads2" />
                         <TextView
+                            android:lines="2"
                             android:layout_marginLeft="5dp"
                             android:id="@+id/ad_body"
                             android:layout_width="wrap_content"

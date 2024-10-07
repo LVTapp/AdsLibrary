@@ -33,6 +33,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.lvt.ads.BuildConfig;
 import com.lvt.ads.R;
 import com.lvt.ads.callback.BannerCallBack;
@@ -46,7 +48,6 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -56,7 +57,6 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.VideoOptions;
-import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -2582,7 +2582,7 @@ public class Admob {
                         .setStartMuted(true)
                         .build();
 
-                NativeAdOptions adOptions = new NativeAdOptions.Builder()
+                com.google.android.gms.ads.nativead.NativeAdOptions adOptions = new com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
                         .setVideoOptions(videoOptions)
                         .build();
                 AdLoader adLoader = new AdLoader.Builder(context, id)
