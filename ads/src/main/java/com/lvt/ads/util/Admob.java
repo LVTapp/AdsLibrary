@@ -115,7 +115,7 @@ public class Admob {
     private boolean checkLoadBannerCollap = false;
 
     private long timeLimitShowAds = 0;
-    String adsTestNative = "ca-app-pub-3940256099942544/1044960115";
+    String adsTestNative = "ca-app-pub-3940256099942544/2247696110";
 
     public static Admob getInstance() {
         if (INSTANCE == null) {
