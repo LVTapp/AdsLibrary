@@ -3,6 +3,7 @@ package com.lvt.ads.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class Helper {
     private static final String FILE_SETTING = "setting.pref";
@@ -21,6 +22,17 @@ public class Helper {
     public static int getNumClickAdsPerDay(Context context, String idAds) {
         return context.getSharedPreferences(FILE_SETTING_ADMOD, Context.MODE_PRIVATE).getInt(idAds, 0);
     }
+    /**
+     * Tăng số click trên 1 ads
+     *
+     * @param context
+     * @param idAds
+     */
+    public static void increaseNumClickAdsPerDay(Context context, String idAds) {
+        SharedPreferences pre = context.getSharedPreferences(FILE_SETTING_ADMOD, Context.MODE_PRIVATE);
+        int count = pre.getInt(idAds, 0);
+        pre.edit().putInt(idAds, count + 1).apply();
+    }
 
 
     /**
@@ -30,6 +42,7 @@ public class Helper {
      * @param context
      */
     public static void setupAdmodData(Context context) {
+        Log.e("xxxxx", "setupAdmodData:");
         if (isFirstOpenApp(context)) {
             context.getSharedPreferences(FILE_SETTING_ADMOD, Context.MODE_PRIVATE).edit().putLong(KEY_FIRST_TIME, System.currentTimeMillis()).apply();
             context.getSharedPreferences(FILE_SETTING, Context.MODE_PRIVATE).edit().putBoolean(IS_FIRST_OPEN, true).apply();
@@ -40,6 +53,7 @@ public class Helper {
        /*
        qua q ngày reset lại data
         */
+        Log.e("xxxxx rs", String.valueOf(rs));
         if (rs >= 24 * 60 * 60 * 1000) {
             resetAdmodData(context);
         }
@@ -47,6 +61,7 @@ public class Helper {
 
 
     private static void resetAdmodData(Context context) {
+        Log.e("xxxxx rs", "resetAdmodData");
         context.getSharedPreferences(FILE_SETTING_ADMOD, Context.MODE_PRIVATE).edit().clear().apply();
         context.getSharedPreferences(FILE_SETTING_ADMOD, Context.MODE_PRIVATE).edit().putLong(KEY_FIRST_TIME, System.currentTimeMillis()).apply();
     }

@@ -78,15 +78,7 @@ public class Splash extends AppCompatActivity {
         listID.add("ca-app-pub-3940256099942544/9257395921");
         listID.add("ca-app-pub-3940256099942544/9257395921");
 
-        AdsConsentManager adsConsentManager = new AdsConsentManager(this);
-        adsConsentManager.requestUMP(b -> {
-            if (b) {
-                Admob.getInstance().initAdmob(getBaseContext(), null);
-                AppOpenManager.getInstance().init(getApplication(), getString(R.string.ads_test_resume));
-                AppOpenManager.getInstance().disableAppResumeWithActivity(Splash.class);
-            }
-            AppOpenManager.getInstance().loadOpenAppAdSplash(this,listID,true, adCallback );
-        });
+        AppOpenManager.getInstance().loadOpenAppAdSplash(this,listID,true, adCallback );
 
 
 

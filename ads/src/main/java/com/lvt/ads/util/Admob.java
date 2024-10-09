@@ -3,7 +3,6 @@ package com.lvt.ads.util;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
@@ -11,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -24,7 +22,6 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,7 +69,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Admob {
     private static Admob INSTANCE;
@@ -80,7 +76,7 @@ public class Admob {
     private LoadingAdsDialog dialog;
     private int currentClicked = 0;
     private int numShowAds = 3;
-    private int maxClickAds = 100;
+    private int maxClickAds = 10;
     private Handler handlerTimeout;
     private Runnable rdTimeout;
     private boolean isTimeLimited;
@@ -125,6 +121,7 @@ public class Admob {
     }
 
     public void initAdmob(Context context, List<String> testDeviceList) {
+        Helper.setupAdmodData(context);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             String processName = Application.getProcessName();
             String packageName = context.getPackageName();
@@ -1738,7 +1735,6 @@ public class Admob {
     }
 
     private void showInterAdByTimes(final Context context, InterstitialAd mInterstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
-        Helper.setupAdmodData(context);
         if (!isShowAllAds) {
             callback.onAdClosed();
             callback.onNextAction();
@@ -1820,16 +1816,20 @@ public class Admob {
             public void onAdClicked() {
                 super.onAdClicked();
                 callback.onAdClicked();
+                Helper.increaseNumClickAdsPerDay(context, mInterstitialAd.getAdUnitId());
                 if (disableAdResumeWhenClickAds)
                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                 FirebaseUtil.logClickAdsEvent(context, mInterstitialAd.getAdUnitId());
             }
         });
-
-        if (Helper.getNumClickAdsPerDay(context, mInterstitialAd.getAdUnitId()) < maxClickAds) {
+        showInterstitialAd(context, mInterstitialAd, callback);
+      /*  if (Helper.getNumClickAdsPerDay(context, mInterstitialAd.getAdUnitId()) < maxClickAds) {
             showInterstitialAd(context, mInterstitialAd, callback);
             return;
-        }
+        }else{
+            callback.onAdClosed();
+            callback.onNextAction();
+        }*/
         if (callback != null) {
             callback.onAdClosed();
             callback.onNextAction();
@@ -2153,6 +2153,10 @@ public class Admob {
 
     public void loadNativeAd(Context context, String id, final NativeCallback callback) {
         Log.e("Load native id ", id);
+
+        /*if (Helper.getNumClickAdsPerDay(context, id) > maxClickAds) {
+            callback.onAdFailedToLoad();
+        }*/
         if (!isShowAllAds || !isNetworkConnected() || isDeviceTest) {
             callback.onAdFailedToLoad();
         } else {
@@ -2193,6 +2197,7 @@ public class Admob {
                                 public void onAdClicked() {
                                     super.onAdClicked();
                                     Log.e(TAG, "NativeAd onAdClicked: ");
+                                    Helper.increaseNumClickAdsPerDay(context, id);
                                     callback.onAdClicked();
                                     if (disableAdResumeWhenClickAds) {
                                         AppOpenManager.getInstance().disableAdResumeByClickAction();
@@ -2219,6 +2224,10 @@ public class Admob {
             frameLayout.removeAllViews();
             return;
         }
+        /*if (Helper.getNumClickAdsPerDay(context, id) > maxClickAds) {
+            frameLayout.removeAllViews();
+            return;
+        }*/
         if (isShowNative) {
             if (isNetworkConnected()) {
                 VideoOptions videoOptions = new VideoOptions.Builder()
@@ -2258,6 +2267,7 @@ public class Admob {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+                                Helper.increaseNumClickAdsPerDay(context, id);
                                 if (disableAdResumeWhenClickAds)
                                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                                 FirebaseUtil.logClickAdsEvent(context, id);
@@ -2505,11 +2515,15 @@ public class Admob {
 
     }
 
-    public void loadNativeAdHide(Context context, String id, FrameLayout frameLayout, int layoutNative) {
+    public void loadNativeAdHide(Context context, String id, FrameLayout frameLayout, int layoutNative,boolean iconDown) {
         if (!isShowAllAds || !isNetworkConnected() || isDeviceTest) {
             frameLayout.removeAllViews();
             return;
         }
+        /*if (Helper.getNumClickAdsPerDay(context, id) > maxClickAds) {
+            frameLayout.removeAllViews();
+            return;
+        }*/
         if (isShowNative) {
             if (isNetworkConnected()) {
                 VideoOptions videoOptions = new VideoOptions.Builder()
@@ -2530,6 +2544,7 @@ public class Admob {
                                     ImageView imgNativeAd = adView.findViewById(R.id.iv_down);
                                     if(imgNativeAd!=null){
                                         imgNativeAd.setVisibility(View.VISIBLE);
+                                        if(!iconDown) {imgNativeAd.setRotation(180);}
                                         imgNativeAd.setOnClickListener(v -> {
                                             adView.findViewById(R.id.rl_collap).setVisibility(View.GONE);
                                         });
@@ -2554,6 +2569,7 @@ public class Admob {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+                                Helper.increaseNumClickAdsPerDay(context, id);
                                 if (disableAdResumeWhenClickAds)
                                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                                 FirebaseUtil.logClickAdsEvent(context, id);
@@ -2572,11 +2588,120 @@ public class Admob {
             frameLayout.removeAllViews();
         }
     }
-    public void loadNativeAdHide(Context context, String id, FrameLayout frameLayout, int layoutNative,int timeDelay) {
+
+    public void loadNativeBanner(Context context, String id, FrameLayout frameLayout,int timeDelay,boolean iconDown) {
         if (!isShowAllAds || !isNetworkConnected() || isDeviceTest) {
             frameLayout.removeAllViews();
             return;
         }
+        /*if (Helper.getNumClickAdsPerDay(context, id) > maxClickAds) {
+            frameLayout.removeAllViews();
+            return;
+        }*/
+        Log.d(TAG, "loadNativeAdHide");
+        if (isShowNative) {
+            if (isNetworkConnected()) {
+                VideoOptions videoOptions = new VideoOptions.Builder()
+                        .setStartMuted(true)
+                        .build();
+
+                NativeAdOptions adOptions = new NativeAdOptions.Builder()
+                        .setVideoOptions(videoOptions)
+                        .build();
+                AdLoader adLoader = new AdLoader.Builder(context, id)
+                        .forNativeAd(nativeAd -> {
+                            NativeAdView adView = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_hide_big, null);
+                            NativeAdView adViewSmall = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_big_small, null);
+                            frameLayout.removeAllViews();
+                            if (!checkDeviceTest(nativeAd, id)) {
+                                frameLayout.addView(adView);
+                                Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                                Admob.getInstance().pushAdsToViewCustom(nativeAd, adViewSmall);
+                                try {
+                                    ImageView imgNativeAd = adView.findViewById(R.id.iv_down);
+                                    if(imgNativeAd!=null){
+                                        imgNativeAd.setVisibility(View.VISIBLE);
+                                        if(!iconDown){imgNativeAd.setRotation(180);}
+                                        imgNativeAd.setOnClickListener(v -> {
+                                            frameLayout.removeAllViews();
+                                            frameLayout.addView(adViewSmall);
+                                        });
+                                    }
+                                } catch (Exception e) {}
+                            }
+                            nativeAd.setOnPaidEventListener(adValue -> {
+                                Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                                FirebaseUtil.logPaidAdImpression(context,
+                                        adValue,
+                                        id,
+                                        AdType.NATIVE);
+                            });
+                        })
+                        .withAdListener(new AdListener() {
+                            @Override
+                            public void onAdFailedToLoad(LoadAdError error) {
+                                Log.e(TAG, "NativeAd onAdFailedToLoad: " + error.getMessage());
+                                frameLayout.removeAllViews();
+                            }
+
+                            @Override
+                            public void onAdClicked() {
+                                super.onAdClicked();
+                                Log.e(TAG, "NativeAd onAdClicked: ");
+                                Helper.increaseNumClickAdsPerDay(context, id);
+                                if (disableAdResumeWhenClickAds)
+                                    AppOpenManager.getInstance().disableAdResumeByClickAction();
+                                FirebaseUtil.logClickAdsEvent(context, id);
+                                if (timeLimitAds > 1000) {
+                                    setTimeLimitNative();
+                                }
+                            }
+
+                            @Override
+                            public void onAdImpression() {
+                                super.onAdImpression();
+                                Log.e(TAG, "NativeAd onAdImpression: ");
+                                if(timeDelay>0){
+                                    countDownTimerNative = new CountDownTimer(timeDelay, 1000) {
+                                        @Override
+                                        public void onTick(long l) {
+                                        }
+                                        @Override
+                                        public void onFinish() {
+                                            loadNativeBanner(context,id,frameLayout, timeDelay,iconDown);
+                                        }
+                                    };
+                                    countDownTimerNative.start();
+                                }
+                            }
+
+                            @Override
+                            public void onAdOpened() {
+                                Log.e(TAG, "NativeAd onAdOpened: ");
+                                super.onAdOpened();
+                            }
+                        })
+                        .withNativeAdOptions(adOptions)
+                        .build();
+                adLoader.loadAd(getAdRequest());
+            } else {
+                frameLayout.removeAllViews();
+            }
+        } else {
+            frameLayout.removeAllViews();
+        }
+    }
+
+
+    public void loadNativeAdHide(Context context, String id, FrameLayout frameLayout, int layoutNative,int timeDelay,boolean iconDown) {
+        if (!isShowAllAds || !isNetworkConnected() || isDeviceTest) {
+            frameLayout.removeAllViews();
+            return;
+        }
+        /*if (Helper.getNumClickAdsPerDay(context, id) > maxClickAds) {
+            frameLayout.removeAllViews();
+            return;
+        }*/
         Log.d(TAG, "loadNativeAdHide");
         if (isShowNative) {
             if (isNetworkConnected()) {
@@ -2598,8 +2723,10 @@ public class Admob {
                                 ImageView imgNativeAd = adView.findViewById(R.id.iv_down);
                                 if(imgNativeAd!=null){
                                     imgNativeAd.setVisibility(View.VISIBLE);
+                                    if(!iconDown){imgNativeAd.setRotation(180);}
                                     imgNativeAd.setOnClickListener(v -> {
                                         adView.findViewById(R.id.rl_collap).setVisibility(View.GONE);
+                                        imgNativeAd.setVisibility(View.GONE);
                                     });
                                 }
                                } catch (Exception e) {}
@@ -2622,6 +2749,7 @@ public class Admob {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+                                Helper.increaseNumClickAdsPerDay(context, id);
                                 if (disableAdResumeWhenClickAds)
                                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                                 FirebaseUtil.logClickAdsEvent(context, id);
@@ -2633,17 +2761,19 @@ public class Admob {
                             @Override
                             public void onAdImpression() {
                                 super.onAdImpression();
-                                countDownTimerNative = new CountDownTimer(timeDelay, 1000) {
-                                    @Override
-                                    public void onTick(long l) {
-                                    }
+                                if(timeDelay>0){
+                                    countDownTimerNative = new CountDownTimer(timeDelay, 1000) {
+                                        @Override
+                                        public void onTick(long l) {
+                                        }
 
-                                    @Override
-                                    public void onFinish() {
-                                        loadNativeAdHide(context,id,frameLayout,layoutNative, timeDelay);
-                                    }
-                                };
-                                countDownTimerNative.start();
+                                        @Override
+                                        public void onFinish() {
+                                            loadNativeAdHide(context,id,frameLayout,layoutNative, timeDelay,iconDown);
+                                        }
+                                    };
+                                    countDownTimerNative.start();
+                                }
                             }
                         })
                         .withNativeAdOptions(adOptions)

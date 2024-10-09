@@ -5,26 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.lvt.ads.callback.BannerCallBack;
-import com.lvt.ads.callback.NativeCallback;
-import com.lvt.ads.callback.PurchaseListioner;
 import com.lvt.ads.callback.RewardCallback;
 import com.lvt.ads.callback.InterCallback;
 import com.lvt.ads.util.Admob;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.nativead.NativeAd;
-import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
-import com.lvt.ads.util.BannerGravity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         listID.add("1");
         listID.add("2");
         listID.add(getString(R.string.ads_test_native));
-        Admob.getInstance().loadNativeAdHide(this, "ca-app-pub-3940256099942544/1044960115", native_ads,R.layout.ads_native_hide_small_top,10000);
+        Admob.getInstance().loadNativeAdHide(this, getString(R.string.ads_test_native), native_ads,R.layout.ads_native_hide_big,10000,true);
 
         //Admob.getInstance().loadNativeAd(this, "id native", native_ads,R.layout.ads_native);
     }

@@ -10,6 +10,7 @@ import com.lvt.ads.callback.NativeCallback;
 import com.lvt.ads.util.Admob;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
+import com.lvt.ads.util.BannerGravity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class MainActivity3 extends AppCompatActivity {
         listID.add("getString(R.string.ads_test_inter)");
         listID.add(getString(R.string.ads_test_banner));
         listID.add("getString(R.string.admod_banner_collap_id)");
-        Admob.getInstance().loadBanner(this, listID);
+        Admob.getInstance().loadCollapsibleBanner(this, getString(R.string.admod_banner_collap_id), BannerGravity.top);
         Admob.getInstance().loadNativeAd(this, getString(R.string.admod_native_id), new NativeCallback(){
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {

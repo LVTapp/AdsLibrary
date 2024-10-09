@@ -9,5 +9,5 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="color_app">#32E625</color>
-
+    <color name="native_bg_hide_btn">#424242</color>
 </resources>
