@@ -1735,6 +1735,7 @@ public class Admob {
     }
 
     private void showInterAdByTimes(final Context context, InterstitialAd mInterstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
+        Helper.setupAdmodData(context);
         if (!isShowAllAds) {
             callback.onAdClosed();
             callback.onNextAction();
@@ -1816,20 +1817,16 @@ public class Admob {
             public void onAdClicked() {
                 super.onAdClicked();
                 callback.onAdClicked();
-                Helper.increaseNumClickAdsPerDay(context, mInterstitialAd.getAdUnitId());
                 if (disableAdResumeWhenClickAds)
                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                 FirebaseUtil.logClickAdsEvent(context, mInterstitialAd.getAdUnitId());
             }
         });
-        showInterstitialAd(context, mInterstitialAd, callback);
-      /*  if (Helper.getNumClickAdsPerDay(context, mInterstitialAd.getAdUnitId()) < maxClickAds) {
+
+        if (Helper.getNumClickAdsPerDay(context, mInterstitialAd.getAdUnitId()) < maxClickAds) {
             showInterstitialAd(context, mInterstitialAd, callback);
             return;
-        }else{
-            callback.onAdClosed();
-            callback.onNextAction();
-        }*/
+        }
         if (callback != null) {
             callback.onAdClosed();
             callback.onNextAction();
@@ -2197,7 +2194,7 @@ public class Admob {
                                 public void onAdClicked() {
                                     super.onAdClicked();
                                     Log.e(TAG, "NativeAd onAdClicked: ");
-                                    Helper.increaseNumClickAdsPerDay(context, id);
+                                    //Helper.increaseNumClickAdsPerDay(context, id);
                                     callback.onAdClicked();
                                     if (disableAdResumeWhenClickAds) {
                                         AppOpenManager.getInstance().disableAdResumeByClickAction();
@@ -2267,7 +2264,7 @@ public class Admob {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
-                                Helper.increaseNumClickAdsPerDay(context, id);
+                                //Helper.increaseNumClickAdsPerDay(context, id);
                                 if (disableAdResumeWhenClickAds)
                                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                                 FirebaseUtil.logClickAdsEvent(context, id);
@@ -2569,7 +2566,7 @@ public class Admob {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
-                                Helper.increaseNumClickAdsPerDay(context, id);
+                                //Helper.increaseNumClickAdsPerDay(context, id);
                                 if (disableAdResumeWhenClickAds)
                                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                                 FirebaseUtil.logClickAdsEvent(context, id);
@@ -2648,7 +2645,7 @@ public class Admob {
                             public void onAdClicked() {
                                 super.onAdClicked();
                                 Log.e(TAG, "NativeAd onAdClicked: ");
-                                Helper.increaseNumClickAdsPerDay(context, id);
+                                //Helper.increaseNumClickAdsPerDay(context, id);
                                 if (disableAdResumeWhenClickAds)
                                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                                 FirebaseUtil.logClickAdsEvent(context, id);
@@ -2749,7 +2746,7 @@ public class Admob {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
-                                Helper.increaseNumClickAdsPerDay(context, id);
+                                //Helper.increaseNumClickAdsPerDay(context, id);
                                 if (disableAdResumeWhenClickAds)
                                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                                 FirebaseUtil.logClickAdsEvent(context, id);
