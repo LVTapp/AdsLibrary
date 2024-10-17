@@ -94,7 +94,6 @@ public class Admob {
     //true : show ads
     //false : hide ads
     public static boolean isDeviceTest = false;
-    private CountDownTimer countDownTimer;
     private CountDownTimer countDownTimerNative;
     InterstitialAd mInterstitialSplash;
     InterstitialAd interstitialAd;
@@ -109,6 +108,11 @@ public class Admob {
     public static boolean isShowAllAds = true;
     private boolean checkLoadBanner = false;
     private boolean checkLoadBannerCollap = false;
+
+    private Handler handler = new Handler();
+    private Handler handlerNT = new Handler();
+    private Runnable runnable;
+    private Runnable runnableNT;
 
     private long timeLimitShowAds = 0;
     String adsTestNative = "ca-app-pub-3940256099942544/2247696110";
@@ -379,6 +383,7 @@ public class Admob {
     }
 
     public void loadCollapsibleBanner(final Activity mActivity, String id, int timeDelay) {
+        Log.e(TAG, "loadCollapsibleBanner");
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         destroyCollapse(adContainer);
@@ -920,17 +925,18 @@ public class Admob {
                 @Override
                 public void onAdImpression() {
                     super.onAdImpression();
-                    countDownTimer = new CountDownTimer(timeDelay, 1000) {
+                    if (runnable != null) {
+                        handler.removeCallbacks(runnable); // Hủy bỏ runnable trước đó nếu có
+                    }
+                    Log.e(TAG, "onAdImpression run");
+                    runnable = new Runnable() {
                         @Override
-                        public void onTick(long l) {
-                        }
-
-                        @Override
-                        public void onFinish() {
+                        public void run() {
+                            Log.e(TAG, "onAdImpression run: Performing action after 10 seconds");
                             loadCollapsibleBanner(mActivity, id, timeDelay);
                         }
                     };
-                    countDownTimer.start();
+                    handler.postDelayed(runnable,timeDelay); // Bắt đầu chạy runnable
                 }
 
                 @Override
@@ -2658,18 +2664,15 @@ public class Admob {
                             public void onAdImpression() {
                                 super.onAdImpression();
                                 Log.e(TAG, "NativeAd onAdImpression: ");
-                                if(timeDelay>0){
-                                    countDownTimerNative = new CountDownTimer(timeDelay, 1000) {
-                                        @Override
-                                        public void onTick(long l) {
-                                        }
-                                        @Override
-                                        public void onFinish() {
-                                            loadNativeBanner(context,id,frameLayout, timeDelay,iconDown);
-                                        }
-                                    };
-                                    countDownTimerNative.start();
+                                if (runnableNT != null) {
+                                    handlerNT.removeCallbacks(runnableNT); // Hủy bỏ runnable trước đó nếu có
                                 }
+                                Log.e(TAG, "onAdImpression run");
+                                runnableNT = () -> {
+                                    Log.e(TAG, "onAdImpression run: Performing action after 10 seconds");
+                                    loadNativeBanner(context,id,frameLayout, timeDelay,iconDown);
+                                };
+                                handlerNT.postDelayed(runnableNT,timeDelay); // Bắt đầu chạy runnable
                             }
 
                             @Override

@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        Admob.getInstance().loadCollapsibleBanner(MainActivity.this,getString(R.string.admod_banner_collap_id),50000);
+        Admob.getInstance().loadCollapsibleBanner(MainActivity.this,getString(R.string.admod_banner_collap_id),20000);
     }
 
     @Override
@@ -149,9 +149,9 @@ public class MainActivity extends AppCompatActivity {
         listID.add("1");
         listID.add("2");
         listID.add(getString(R.string.ads_test_native));
-        Admob.getInstance().loadNativeAdHide(this, getString(R.string.ads_test_native), native_ads,R.layout.ads_native_hide_big,10000,true);
+        Admob.getInstance().loadNativeBanner(this, getString(R.string.ads_test_native), native_ads,10000,true);
 
-        //Admob.getInstance().loadNativeAd(this, "id native", native_ads,R.layout.ads_native);
+        Admob.getInstance().loadNativeAd(this, "id native", native_ads,R.layout.ads_native);
     }
 
     private void loadAdInter() {
