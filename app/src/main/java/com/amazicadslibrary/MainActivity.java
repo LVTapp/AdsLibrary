@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.lvt.ads.callback.RewardCallback;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private InterstitialAd mInterstitialAd;
+    private InterstitialAd mInterstitialAd=null;
     private FrameLayout native_ads;
 
     public static String PRODUCT_ID_YEAR = "android.test.purchased";
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         listID = new ArrayList<>();
         listID.add(getString(R.string.admod_banner_collap_id));
        // Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
-        //Admob.getInstance().setTimeLimitShowAds(30000);
+         Admob.getInstance().setTimeLimitShowAds(30000);
        // loadAdsNative();
 
         findViewById(R.id.clickFGM).setOnClickListener(new View.OnClickListener() {
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         loadAdsNative();
+        loadInterNotLimit();
 
 
         findViewById(R.id.btnClickInter).setOnClickListener(new View.OnClickListener() {
@@ -132,9 +134,30 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+        findViewById(R.id.btnClickShowInterNotLimit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Admob.getInstance().showInterAdsNotLimit(MainActivity.this,mInterstitialAd,new InterCallback(){
+                    @Override
+                    public void onNextAction() {
+                        super.onNextAction();
+                       loadInterNotLimit();
+                    }
+                });
+            }
+        });
 
         Admob.getInstance().loadCollapsibleBanner(MainActivity.this,getString(R.string.admod_banner_collap_id),20000);
+    }
+
+    private void loadInterNotLimit() {
+        Admob.getInstance().loadInterAds(this,getString(R.string.ads_test_inter),new InterCallback(){
+            @Override
+            public void onAdLoadSuccess(InterstitialAd interstitialAd) {
+                super.onAdLoadSuccess(interstitialAd);
+                mInterstitialAd = interstitialAd;
+            }
+        });
     }
 
     @Override
@@ -150,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
         listID.add("2");
         listID.add(getString(R.string.ads_test_native));
         Admob.getInstance().loadNativeBanner(this, getString(R.string.ads_test_native), native_ads,10000,true);
-
         Admob.getInstance().loadNativeAd(this, "id native", native_ads,R.layout.ads_native);
     }
 
