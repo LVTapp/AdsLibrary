@@ -1658,6 +1658,45 @@ public class Admob {
                     });
         }
     }
+    public void loadInterAdsNotLimit(Context context, String id, InterCallback adCallback) {
+        if (!isShowAllAds) {
+            adCallback.onNextAction();
+            adCallback.onAdFailedToLoad(null);
+            return;
+        }
+        adCallback.onAdLoaded();
+        //if (isShowInter) {
+           // isTimeout = false;
+            InterstitialAd.load(context, id, getAdRequest(),
+                    new InterstitialAdLoadCallback() {
+                        @Override
+                        public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                            if (adCallback != null) {
+                                adCallback.onAdLoadSuccess(interstitialAd);
+                            }
+                            //tracking adjust
+                            interstitialAd.setOnPaidEventListener(adValue -> {
+                                Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                                FirebaseUtil.logPaidAdImpression(context,
+                                        adValue,
+                                        interstitialAd.getAdUnitId(), AdType.INTERSTITIAL);
+                                adCallback.onEarnRevenue((double) adValue.getValueMicros());
+                            });
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            // Handle the error
+                            Log.i(TAG, loadAdError.getMessage());
+                            if (adCallback != null) {
+                                adCallback.onAdFailedToLoad(loadAdError);
+                                adCallback.onNextAction();
+                            }
+                        }
+
+                    });
+     //   }
+    }
 
     public void loadInterAds(Context context, List<String> listID, InterCallback adCallback) {
         if (listID == null) {
