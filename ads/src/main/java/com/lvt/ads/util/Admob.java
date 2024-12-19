@@ -1850,7 +1850,7 @@ public class Admob {
         });
 
         if (Helper.getNumClickAdsPerDay(context, mInterstitialAd.getAdUnitId()) < maxClickAds) {
-            showInterstitialAd(context, mInterstitialAd, callback);
+            showInterstitialAdNotLimit(context, mInterstitialAd, callback);
             return;
         }
         if (callback != null) {
@@ -1969,6 +1969,65 @@ public class Admob {
 
     private void showInterstitialAd(Context context, InterstitialAd mInterstitialAd, InterCallback callback) {
         if (!isShowInter || !isShowAllAds) {
+            callback.onAdClosed();
+            callback.onNextAction();
+            return;
+        }
+        if (!isNetworkConnected() || mInterstitialAd == null) {
+            callback.onAdClosed();
+            callback.onNextAction();
+            return;
+        }
+        currentClicked++;
+        if (currentClicked >= numShowAds && mInterstitialAd != null) {
+            if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                try {
+                    if (dialog != null && dialog.isShowing())
+                        dialog.dismiss();
+                    dialog = new LoadingAdsDialog(context);
+                    try {
+                        dialog.show();
+                    } catch (Exception e) {
+                        callback.onAdClosed();
+                        callback.onNextAction();
+                        return;
+                    }
+                } catch (Exception e) {
+                    dialog = null;
+                    e.printStackTrace();
+                }
+                new Handler().postDelayed(() -> {
+                    if (AppOpenManager.getInstance().isInitialized()) {
+                        AppOpenManager.getInstance().disableAppResume();
+                    }
+
+                    if (openActivityAfterShowInterAds && callback != null) {
+                        callback.onAdClosed();
+                        callback.onNextAction();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (dialog != null && dialog.isShowing() && !((Activity) context).isDestroyed())
+                                    dialog.dismiss();
+                            }
+                        }, 1500);
+                    }
+                    mInterstitialAd.show((Activity) context);
+
+                }, 800);
+
+            }
+            currentClicked = 0;
+        } else if (callback != null) {
+            if (dialog != null) {
+                dialog.dismiss();
+            }
+            callback.onAdClosed();
+            callback.onNextAction();
+        }
+    }
+    private void showInterstitialAdNotLimit(Context context, InterstitialAd mInterstitialAd, InterCallback callback) {
+        if (!isShowAllAds) {
             callback.onAdClosed();
             callback.onNextAction();
             return;
