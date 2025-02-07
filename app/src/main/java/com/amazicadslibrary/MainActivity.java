@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private InterstitialAd mInterstitialAd=null;
+    private InterstitialAd mInterstitialAd2=null;
     private FrameLayout native_ads;
 
     public static String PRODUCT_ID_YEAR = "android.test.purchased";
@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         listID = new ArrayList<>();
         listID.add(getString(R.string.admod_banner_collap_id));
        // Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
-         Admob.getInstance().setTimeLimitShowAds(30000);
        // loadAdsNative();
 
         findViewById(R.id.clickFGM).setOnClickListener(new View.OnClickListener() {
@@ -57,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
                     public void onNextAction() {
                         super.onNextAction();
                         startActivity(new Intent(MainActivity.this,MainActivity3.class));
-                        loadAdInter();
                     }
 
                     @Override
@@ -137,10 +135,11 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnClickShowInterNotLimit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admob.getInstance().showInterAdsNotLimit(MainActivity.this,mInterstitialAd,new InterCallback(){
+                Admob.getInstance().showInterAds(MainActivity.this,mInterstitialAd2,new InterCallback(){
                     @Override
                     public void onNextAction() {
                         super.onNextAction();
+                        Log.e("xxxx", "onNextAction ");
                        loadInterNotLimit();
                     }
                 });
@@ -151,11 +150,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadInterNotLimit() {
+        Log.e("xxxx", "loadInterNotLimit ");
         Admob.getInstance().loadInterAds(this,getString(R.string.ads_test_inter),new InterCallback(){
             @Override
             public void onAdLoadSuccess(InterstitialAd interstitialAd) {
                 super.onAdLoadSuccess(interstitialAd);
-                mInterstitialAd = interstitialAd;
+                mInterstitialAd2 = interstitialAd;
             }
         });
     }

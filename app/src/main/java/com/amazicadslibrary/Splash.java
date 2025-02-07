@@ -33,6 +33,8 @@ public class Splash extends AppCompatActivity {
                 Settings.Secure.ANDROID_ID);
        Admob.getInstance().setOpenShowAllAds(true);
        Admob.getInstance().setDisableAdResumeWhenClickAds(true);
+        Admob.getInstance().setTimeLimitShowAds(60000);
+
         // Admob
       /*  AppPurchase.getInstance().setBillingListener(new BillingListener() {
             @Override
